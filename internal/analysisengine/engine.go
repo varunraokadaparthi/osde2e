@@ -11,6 +11,7 @@ import (
 	"github.com/openshift/osde2e/internal/llm"
 	"github.com/openshift/osde2e/internal/llm/tools"
 	"github.com/openshift/osde2e/internal/prompts"
+	"github.com/openshift/osde2e/internal/reporter"
 	"github.com/openshift/osde2e/internal/sanitizer"
 	"github.com/openshift/osde2e/internal/reporter"
 	"google.golang.org/genai"
@@ -34,14 +35,14 @@ type ClusterInfo struct {
 
 // Config holds configuration for the analysis engine
 type Config struct {
-	ArtifactsDir        string
-	PromptTemplate      string
-	APIKey              string
-	LLMConfig           *llm.AnalysisConfig
-	FailureContext      string
-	ClusterInfo         *ClusterInfo
-	SanitizerConfig     *sanitizer.Config // Data sanitization configuration
-	NotificationConfig  *reporter.NotificationConfig
+	ArtifactsDir       string
+	PromptTemplate     string
+	APIKey             string
+	LLMConfig          *llm.AnalysisConfig
+	FailureContext     string
+	ClusterInfo        *ClusterInfo
+	SanitizerConfig    *sanitizer.Config // Data sanitization configuration
+	NotificationConfig *reporter.NotificationConfig
 }
 
 // Engine represents the analysis engine
