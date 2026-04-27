@@ -85,6 +85,21 @@ var _ = ginkgo.Describe("Ad Hoc Test Images", ginkgo.Ordered, ginkgo.ContinueOnF
 			imageNames[i] = suite.Image
 		}
 		logger.Info("executing test suites", "suites", imageNames)
+
+		// Verify operator versions match the e2e image tags before running tests.
+		// This prevents running tests against stale operator deployments.
+		for _, suite := range testSuites {
+			operatorName, tag := ExtractOperatorVersionFromImage(suite.Image)
+			if operatorName == "" || tag == "" || tag == "latest" {
+				continue
+			}
+			logger.Info("checking operator version before test execution", "operator", operatorName, "expectedTag", tag)
+			err = WaitForOperatorVersion(ctx, logger, exeConfig.RestConfig, operatorName, tag)
+			if err != nil {
+				logger.Error(err, "operator version check failed", "operator", operatorName)
+				ginkgo.Fail(fmt.Sprintf("operator version pre-check failed for %s: %v", operatorName, err))
+			}
+		}
 	})
 
 	ginkgo.DescribeTable("execution",
